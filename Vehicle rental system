@@ -1,0 +1,96 @@
+#include <iostream>
+#include <string>
+using namespace std;
+// Base class
+class Vehicle {
+protected:
+    int vehicleID;
+    string model;
+    int rentalDays;
+public:
+    Vehicle(int id, string m, int days) {
+        vehicleID = id;
+        model = m;
+        rentalDays = days;
+    }
+    virtual double calculateRental() {
+        return 0;
+    }
+    virtual void displayDetails() {
+        cout << "\nVehicle ID: " << vehicleID << endl;
+        cout << "Model: " << model << endl;
+        cout << "Rental Duration: " << rentalDays << " days" << endl;
+    }
+    virtual ~Vehicle() {}
+};
+// Derived class: Car
+class Car : public Vehicle {
+public:
+    Car(int id, string m, int days)
+        : Vehicle(id, m, days) {}
+    double calculateRental() override {
+        return 1500 * rentalDays;
+    }
+    void displayDetails() override {
+        Vehicle::displayDetails();
+        cout << "Vehicle Type: Car" << endl;
+        cout << "Rate Per Day: Rs. 1500" << endl;
+        cout << "Total Rental Charges: Rs. "
+             << calculateRental() << endl;
+    }
+};
+// Derived class: Bike
+class Bike : public Vehicle {
+public:
+    Bike(int id, string m, int days)
+        : Vehicle(id, m, days) {}
+    double calculateRental() override {
+        return 500 * rentalDays;
+    }
+    void displayDetails() override {
+        Vehicle::displayDetails();
+        cout << "Vehicle Type: Bike" << endl;
+        cout << "Rate Per Day: Rs. 500" << endl;
+        cout << "Total Rental Charges: Rs. "
+             << calculateRental() << endl;
+    }
+};
+int main() {
+    int choice, id, days;
+    string model;
+    cout << "===== VEHICLE RENTAL SYSTEM =====" << endl;
+    cout << "1. Car Rental (Rs. 1500 per day)" << endl;
+    cout << "2. Bike Rental (Rs. 500 per day)" << endl;
+    cout << "Enter your choice: ";
+    if (!(cin >> choice) || (choice != 1 && choice != 2)) {
+        cout << "Invalid choice!" << endl;
+        return 0;
+    }
+    cout << "Enter Vehicle ID: ";
+    if (!(cin >> id) || id <= 0) {
+        cout << "Invalid Vehicle ID!" << endl;
+        return 0;
+    }
+    cin.ignore(1000, '\n');
+    cout << "Enter Vehicle Model: ";
+    getline(cin, model);
+    if (model.empty()) {
+        cout << "Model cannot be empty!" << endl;
+        return 0;
+    }
+    cout << "Enter Rental Duration (days): ";
+    if (!(cin >> days) || days <= 0) {
+        cout << "Invalid rental duration!" << endl;
+        return 0;
+    }
+    Vehicle* vehicle;
+    if (choice == 1) {
+        vehicle = new Car(id, model, days);
+    } else {
+        vehicle = new Bike(id, model, days);
+    }
+    vehicle->displayDetails();
+    delete vehicle;
+    cout << "\nThank you for using the system!" << endl;
+    return 0;
+}
